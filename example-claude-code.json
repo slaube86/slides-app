@@ -1,0 +1,91 @@
+{
+  "version": 1,
+  "assets": [],
+  "deck": {
+    "id": "d_example",
+    "title": "Claude Code – Einführung",
+    "format": { "width": 1280, "height": 720 },
+    "theme": {
+      "palette": ["#111113", "#3b82f6", "#f59e0b", "#10b981", "#ef4444", "#ffffff"],
+      "fontFamily": "'Inter', system-ui, -apple-system, sans-serif",
+      "sizes": { "title": 56, "body": 28, "caption": 18 }
+    },
+    "createdAt": 1749550000000,
+    "updatedAt": 1749550000000,
+    "slides": [
+      {
+        "id": "s_1",
+        "background": "#ffffff",
+        "elements": [
+          { "id": "e_1a", "type": "shape", "shape": "rect", "x": 140, "y": 250, "width": 72, "height": 8, "rotation": 0, "z": 1, "fill": "#111113", "strokeWidth": 0 },
+          { "id": "e_1b", "type": "text", "x": 140, "y": 278, "width": 1040, "height": 130, "rotation": 0, "z": 2, "content": "Claude Code", "styleRole": "title", "fontSize": 96, "color": "#111113", "align": "left" },
+          { "id": "e_1c", "type": "text", "x": 140, "y": 410, "width": 1000, "height": 50, "rotation": 0, "z": 3, "content": "Dein KI-Partner direkt im Terminal.", "styleRole": "body", "fontSize": 30, "color": "#52525b", "align": "left" },
+          { "id": "e_1d", "type": "text", "x": 140, "y": 620, "width": 600, "height": 30, "rotation": 0, "z": 4, "content": "Eine Einführung", "styleRole": "caption", "fontSize": 18, "color": "#a1a1aa", "align": "left" }
+        ]
+      },
+      {
+        "id": "s_2",
+        "background": "#ffffff",
+        "elements": [
+          { "id": "e_2a", "type": "text", "x": 140, "y": 90, "width": 1000, "height": 70, "rotation": 0, "z": 1, "content": "Was ist Claude Code?", "styleRole": "title", "fontSize": 52, "color": "#111113", "align": "left" },
+          { "id": "e_2b", "type": "shape", "shape": "rect", "x": 140, "y": 172, "width": 64, "height": 6, "rotation": 0, "z": 2, "fill": "#111113", "strokeWidth": 0 },
+          { "id": "e_2c", "type": "text", "x": 140, "y": 240, "width": 1000, "height": 420, "rotation": 0, "z": 3, "content": "•&nbsp;&nbsp;Ein agentisches Coding-Tool von Anthropic<br><br>•&nbsp;&nbsp;Läuft direkt in deinem Terminal<br><br>•&nbsp;&nbsp;Versteht dein ganzes Projekt – nicht nur eine einzelne Datei<br><br>•&nbsp;&nbsp;Schreibt Code, führt ihn aus und arbeitet mit Git", "styleRole": "body", "fontSize": 30, "color": "#27272a", "align": "left" }
+        ]
+      },
+      {
+        "id": "s_3",
+        "background": "#ffffff",
+        "elements": [
+          { "id": "e_3a", "type": "text", "x": 140, "y": 90, "width": 1000, "height": 70, "rotation": 0, "z": 1, "content": "Was es kann", "styleRole": "title", "fontSize": 52, "color": "#111113", "align": "left" },
+          { "id": "e_3b", "type": "shape", "shape": "rect", "x": 140, "y": 172, "width": 64, "height": 6, "rotation": 0, "z": 2, "fill": "#111113", "strokeWidth": 0 },
+
+          { "id": "e_3c1", "type": "shape", "shape": "rect", "x": 90, "y": 250, "width": 340, "height": 330, "rotation": 0, "z": 3, "fill": "#f4f4f5", "strokeWidth": 0 },
+          { "id": "e_3c2", "type": "text", "x": 122, "y": 286, "width": 280, "height": 50, "rotation": 0, "z": 6, "content": "Editieren", "styleRole": "title", "fontSize": 30, "color": "#111113", "align": "left" },
+          { "id": "e_3c3", "type": "text", "x": 122, "y": 348, "width": 280, "height": 200, "rotation": 0, "z": 9, "content": "Liest und ändert Dateien projektweit – mit Kontext über deinen gesamten Code.", "styleRole": "caption", "fontSize": 21, "color": "#52525b", "align": "left" },
+
+          { "id": "e_3d1", "type": "shape", "shape": "rect", "x": 470, "y": 250, "width": 340, "height": 330, "rotation": 0, "z": 4, "fill": "#f4f4f5", "strokeWidth": 0 },
+          { "id": "e_3d2", "type": "text", "x": 502, "y": 286, "width": 280, "height": 50, "rotation": 0, "z": 7, "content": "Ausführen", "styleRole": "title", "fontSize": 30, "color": "#111113", "align": "left" },
+          { "id": "e_3d3", "type": "text", "x": 502, "y": 348, "width": 280, "height": 200, "rotation": 0, "z": 10, "content": "Startet Tests, Builds und Tools und reagiert direkt auf die Ergebnisse.", "styleRole": "caption", "fontSize": 21, "color": "#52525b", "align": "left" },
+
+          { "id": "e_3e1", "type": "shape", "shape": "rect", "x": 850, "y": 250, "width": 340, "height": 330, "rotation": 0, "z": 5, "fill": "#f4f4f5", "strokeWidth": 0 },
+          { "id": "e_3e2", "type": "text", "x": 882, "y": 286, "width": 280, "height": 50, "rotation": 0, "z": 8, "content": "Git &amp; PRs", "styleRole": "title", "fontSize": 30, "color": "#111113", "align": "left" },
+          { "id": "e_3e3", "type": "text", "x": 882, "y": 348, "width": 280, "height": 200, "rotation": 0, "z": 11, "content": "Committet, erstellt Branches und öffnet Pull Requests auf Zuruf.", "styleRole": "caption", "fontSize": 21, "color": "#52525b", "align": "left" }
+        ]
+      },
+      {
+        "id": "s_4",
+        "background": "#ffffff",
+        "elements": [
+          { "id": "e_4a", "type": "text", "x": 140, "y": 90, "width": 1000, "height": 70, "rotation": 0, "z": 1, "content": "Typischer Workflow", "styleRole": "title", "fontSize": 52, "color": "#111113", "align": "left" },
+          { "id": "e_4b", "type": "shape", "shape": "rect", "x": 140, "y": 172, "width": 64, "height": 6, "rotation": 0, "z": 2, "fill": "#111113", "strokeWidth": 0 },
+
+          { "id": "e_4n1", "type": "shape", "shape": "ellipse", "x": 140, "y": 244, "width": 46, "height": 46, "rotation": 0, "z": 3, "fill": "#111113", "strokeWidth": 0 },
+          { "id": "e_4t1", "type": "text", "x": 140, "y": 252, "width": 46, "height": 30, "rotation": 0, "z": 7, "content": "1", "styleRole": "body", "fontSize": 22, "color": "#ffffff", "align": "center" },
+          { "id": "e_4l1", "type": "text", "x": 212, "y": 250, "width": 940, "height": 40, "rotation": 0, "z": 11, "content": "Frag in natürlicher Sprache, was du brauchst", "styleRole": "body", "fontSize": 30, "color": "#27272a", "align": "left" },
+
+          { "id": "e_4n2", "type": "shape", "shape": "ellipse", "x": 140, "y": 339, "width": 46, "height": 46, "rotation": 0, "z": 4, "fill": "#111113", "strokeWidth": 0 },
+          { "id": "e_4t2", "type": "text", "x": 140, "y": 347, "width": 46, "height": 30, "rotation": 0, "z": 8, "content": "2", "styleRole": "body", "fontSize": 22, "color": "#ffffff", "align": "center" },
+          { "id": "e_4l2", "type": "text", "x": 212, "y": 345, "width": 940, "height": 40, "rotation": 0, "z": 12, "content": "Claude erkundet das Projekt und plant die Schritte", "styleRole": "body", "fontSize": 30, "color": "#27272a", "align": "left" },
+
+          { "id": "e_4n3", "type": "shape", "shape": "ellipse", "x": 140, "y": 434, "width": 46, "height": 46, "rotation": 0, "z": 5, "fill": "#111113", "strokeWidth": 0 },
+          { "id": "e_4t3", "type": "text", "x": 140, "y": 442, "width": 46, "height": 30, "rotation": 0, "z": 9, "content": "3", "styleRole": "body", "fontSize": 22, "color": "#ffffff", "align": "center" },
+          { "id": "e_4l3", "type": "text", "x": 212, "y": 440, "width": 940, "height": 40, "rotation": 0, "z": 13, "content": "Code wird geschrieben, ausgeführt und getestet", "styleRole": "body", "fontSize": 30, "color": "#27272a", "align": "left" },
+
+          { "id": "e_4n4", "type": "shape", "shape": "ellipse", "x": 140, "y": 529, "width": 46, "height": 46, "rotation": 0, "z": 6, "fill": "#111113", "strokeWidth": 0 },
+          { "id": "e_4t4", "type": "text", "x": 140, "y": 537, "width": 46, "height": 30, "rotation": 0, "z": 10, "content": "4", "styleRole": "body", "fontSize": 22, "color": "#ffffff", "align": "center" },
+          { "id": "e_4l4", "type": "text", "x": 212, "y": 535, "width": 940, "height": 40, "rotation": 0, "z": 14, "content": "Du reviewst die Änderungen und committest", "styleRole": "body", "fontSize": 30, "color": "#27272a", "align": "left" }
+        ]
+      },
+      {
+        "id": "s_5",
+        "background": "#ffffff",
+        "elements": [
+          { "id": "e_5a", "type": "text", "x": 140, "y": 230, "width": 1000, "height": 90, "rotation": 0, "z": 1, "content": "Bereit loszulegen?", "styleRole": "title", "fontSize": 64, "color": "#111113", "align": "left" },
+          { "id": "e_5b", "type": "shape", "shape": "rect", "x": 140, "y": 370, "width": 760, "height": 72, "rotation": 0, "z": 2, "fill": "#111113", "strokeWidth": 0 },
+          { "id": "e_5c", "type": "text", "x": 168, "y": 391, "width": 710, "height": 40, "rotation": 0, "z": 3, "content": "$ npm install -g @anthropic-ai/claude-code", "styleRole": "body", "fontSize": 24, "color": "#ffffff", "align": "left" },
+          { "id": "e_5d", "type": "text", "x": 140, "y": 480, "width": 800, "height": 30, "rotation": 0, "z": 4, "content": "Mehr unter claude.com/code", "styleRole": "caption", "fontSize": 20, "color": "#71717a", "align": "left" }
+        ]
+      }
+    ]
+  }
+}
