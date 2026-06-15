@@ -6,6 +6,7 @@ import { Canvas } from './Canvas';
 import { Inspector } from './Inspector';
 
 const INSPECTOR_KEY = 'slides:inspectorOpen';
+const SNAP_KEY = 'slides:snapEnabled';
 
 interface Props {
   onPresent: () => void;
@@ -26,6 +27,13 @@ export function Editor({ onPresent }: Props) {
   useEffect(() => {
     localStorage.setItem(INSPECTOR_KEY, String(inspectorOpen));
   }, [inspectorOpen]);
+
+  const [snapEnabled, setSnapEnabled] = useState(
+    () => localStorage.getItem(SNAP_KEY) !== 'false',
+  );
+  useEffect(() => {
+    localStorage.setItem(SNAP_KEY, String(snapEnabled));
+  }, [snapEnabled]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -80,10 +88,12 @@ export function Editor({ onPresent }: Props) {
         onPresent={onPresent}
         inspectorOpen={inspectorOpen}
         onToggleInspector={() => setInspectorOpen((v) => !v)}
+        snapEnabled={snapEnabled}
+        onToggleSnap={() => setSnapEnabled((v) => !v)}
       />
       <div className={`editor-body${inspectorOpen ? '' : ' no-inspector'}`}>
         <SlidePanel />
-        <Canvas />
+        <Canvas snapEnabled={snapEnabled} />
         {inspectorOpen && <Inspector />}
       </div>
     </div>

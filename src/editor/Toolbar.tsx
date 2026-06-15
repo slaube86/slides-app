@@ -10,24 +10,35 @@ import {
   IconCircle,
   IconLine,
   IconImage,
+  IconTable,
   IconUndo,
   IconRedo,
   IconPlay,
   IconPanelRight,
+  IconMagnet,
 } from '../ui/icons';
 
 interface Props {
   onPresent: () => void;
   inspectorOpen: boolean;
   onToggleInspector: () => void;
+  snapEnabled: boolean;
+  onToggleSnap: () => void;
 }
 
-export function Toolbar({ onPresent, inspectorOpen, onToggleInspector }: Props) {
+export function Toolbar({
+  onPresent,
+  inspectorOpen,
+  onToggleInspector,
+  snapEnabled,
+  onToggleSnap,
+}: Props) {
   const deck = useDeck((s) => s.deck)!;
   const setTitle = useDeck((s) => s.setTitle);
   const addText = useDeck((s) => s.addText);
   const addShape = useDeck((s) => s.addShape);
   const addImage = useDeck((s) => s.addImage);
+  const addTable = useDeck((s) => s.addTable);
   const setDeck = useDeck((s) => s.setDeck);
   const undo = useDeck((s) => s.undo);
   const redo = useDeck((s) => s.redo);
@@ -86,6 +97,9 @@ export function Toolbar({ onPresent, inspectorOpen, onToggleInspector }: Props) 
         <button className="btn icon-only" title="Linie" aria-label="Linie" onClick={() => addShape('line')}>
           <IconLine />
         </button>
+        <button className="btn icon-only" title="Tabelle" aria-label="Tabelle" onClick={() => addTable()}>
+          <IconTable />
+        </button>
         <button className="btn" onClick={() => fileRef.current?.click()}>
           <IconImage /> Bild
         </button>
@@ -97,6 +111,15 @@ export function Toolbar({ onPresent, inspectorOpen, onToggleInspector }: Props) 
         </button>
         <button className="btn icon-only" onClick={redo} disabled={!canRedo} title="Wiederholen (⌘⇧Z)" aria-label="Wiederholen">
           <IconRedo />
+        </button>
+        <button
+          className={`btn icon-only${snapEnabled ? ' on' : ''}`}
+          onClick={onToggleSnap}
+          title={snapEnabled ? 'Snapping aus' : 'Snapping an'}
+          aria-label="Snapping umschalten"
+          aria-pressed={snapEnabled}
+        >
+          <IconMagnet />
         </button>
       </div>
 

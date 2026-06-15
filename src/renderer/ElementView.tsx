@@ -1,6 +1,7 @@
 import type { CSSProperties } from 'react';
 import type { ShapeElement, SlideElement, TextElement, Theme } from '../types';
 import { AssetImage } from './AssetImage';
+import { TableView } from './TableView';
 
 interface Props {
   element: SlideElement;
@@ -17,6 +18,8 @@ export function ElementView({ element, theme }: Props) {
       return <AssetImage assetId={element.assetId} fit={element.fit} />;
     case 'shape':
       return <ShapeView el={element} />;
+    case 'table':
+      return <TableView el={element} theme={theme} />;
   }
 }
 

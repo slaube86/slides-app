@@ -1,7 +1,7 @@
 // Datenmodell — siehe initial-slides-app.md.
 // Ein Deck ist ein verschachteltes JSON-Objekt; serialisiert sauber, ganz ohne DB.
 
-export type ElementType = 'text' | 'image' | 'shape';
+export type ElementType = 'text' | 'image' | 'shape' | 'table';
 
 export interface BaseElement {
   id: string;
@@ -41,7 +41,21 @@ export interface ShapeElement extends BaseElement {
   strokeWidth?: number;
 }
 
-export type SlideElement = TextElement | ImageElement | ShapeElement;
+export interface TableElement extends BaseElement {
+  type: 'table';
+  rows: number;
+  cols: number;
+  cells: string[][]; // [row][col] — Rich-Text / HTML pro Zelle
+  headerRow?: boolean; // erste Zeile als Kopfzeile hervorheben
+  borderColor?: string;
+  borderWidth?: number;
+  headerFill?: string;
+  fontSize?: number;
+  color?: string;
+  align?: 'left' | 'center' | 'right';
+}
+
+export type SlideElement = TextElement | ImageElement | ShapeElement | TableElement;
 
 export interface Slide {
   id: string;

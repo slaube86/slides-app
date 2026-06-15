@@ -6,6 +6,7 @@ import type {
   ShapeElement,
   Slide,
   SlideElement,
+  TableElement,
   TextElement,
   Theme,
 } from '../types';
@@ -49,6 +50,9 @@ interface DeckState {
   addText: (role?: TextElement['styleRole']) => void;
   addShape: (shape: ShapeElement['shape']) => void;
   addImage: (assetId: string, width: number, height: number) => void;
+  addTable: (rows?: number, cols?: number) => void;
+  resizeTable: (id: string, rows: number, cols: number) => void;
+  updateTableCell: (id: string, row: number, col: number, html: string) => void;
   updateElement: (
     id: string,
     patch: Partial<SlideElement>,
@@ -185,14 +189,16 @@ export const useDeck = create<DeckState>((set, get) => {
     },
 
     duplicateSlide(idx) {
+      const src = get().deck?.slides[idx];
+      if (!src) return;
+      // Aus dem nicht-Draft-State tief klonen, damit verschachtelte Daten (z.B.
+      // Tabellen-Zellen) nicht zwischen Original und Kopie geteilt werden.
+      const copy: Slide = {
+        id: uid('s_'),
+        background: src.background,
+        elements: src.elements.map((el) => ({ ...structuredClone(el), id: uid('e_') })),
+      };
       mutate((d) => {
-        const src = d.slides[idx];
-        if (!src) return;
-        const copy: Slide = {
-          id: uid('s_'),
-          background: src.background,
-          elements: src.elements.map((el) => ({ ...el, id: uid('e_') })),
-        };
         d.slides.splice(idx + 1, 0, copy);
       });
       set({ currentSlide: idx + 1, selectedId: null });
@@ -293,6 +299,61 @@ export const useDeck = create<DeckState>((set, get) => {
       set({ selectedId: id });
     },
 
+    addTable(rows = 3, cols = 3) {
+      const { deck, currentSlide } = get();
+      if (!deck) return;
+      const id = uid('e_');
+      const width = Math.min(720, deck.format.width * 0.6);
+      const height = Math.min(320, deck.format.height * 0.4);
+      const el: TableElement = {
+        id,
+        type: 'table',
+        x: deck.format.width / 2 - width / 2,
+        y: deck.format.height / 2 - height / 2,
+        width,
+        height,
+        rotation: 0,
+        z: nextZ(deck, currentSlide),
+        rows,
+        cols,
+        cells: makeCells(rows, cols),
+        headerRow: true,
+        borderColor: '#cbd5e1',
+        borderWidth: 1,
+        headerFill: '#f1f5f9',
+        fontSize: 20,
+        color: deck.theme.palette[0],
+        align: 'left',
+      };
+      mutate((d) => {
+        currentSlideOf(d, currentSlide)?.elements.push(el);
+      });
+      set({ selectedId: id });
+    },
+
+    resizeTable(id, rows, cols) {
+      const { currentSlide } = get();
+      const r = Math.max(1, Math.min(20, rows));
+      const c = Math.max(1, Math.min(12, cols));
+      mutate((d) => {
+        const el = currentSlideOf(d, currentSlide)?.elements.find((e) => e.id === id);
+        if (el?.type !== 'table') return;
+        el.cells = makeCells(r, c, el.cells);
+        el.rows = r;
+        el.cols = c;
+      });
+    },
+
+    updateTableCell(id, row, col, html) {
+      const { currentSlide } = get();
+      mutate((d) => {
+        const el = currentSlideOf(d, currentSlide)?.elements.find((e) => e.id === id);
+        if (el?.type !== 'table') return;
+        if (!el.cells[row]) el.cells[row] = [];
+        el.cells[row][col] = html;
+      }, false); // live, kein History-Spam (Checkpoint setzt der Edit-Start)
+    },
+
     updateElement(id, patch, opts) {
       const history = opts?.history ?? true;
       const { currentSlide } = get();
@@ -313,13 +374,16 @@ export const useDeck = create<DeckState>((set, get) => {
     },
 
     duplicateElement(id) {
-      const { currentSlide } = get();
+      const { currentSlide, deck } = get();
+      const src = deck?.slides[currentSlide].elements.find((e) => e.id === id);
+      if (!src) return;
       const newId = uid('e_');
+      const clone = { ...structuredClone(src), id: newId, x: src.x + 24, y: src.y + 24 };
       mutate((d) => {
         const s = currentSlideOf(d, currentSlide);
-        const el = s?.elements.find((e) => e.id === id);
-        if (s && el) {
-          s.elements.push({ ...el, id: newId, x: el.x + 24, y: el.y + 24, z: nextZ(d, currentSlide) });
+        if (s) {
+          clone.z = nextZ(d, currentSlide);
+          s.elements.push(clone);
         }
       });
       set({ selectedId: newId });
@@ -372,4 +436,12 @@ function reorder(
     a.z = b.z;
     b.z = tmp;
   });
+}
+
+// Baut eine rows×cols-Zellenmatrix und übernimmt dabei vorhandene Inhalte
+// (beim Vergrößern/Verkleinern der Tabelle).
+function makeCells(rows: number, cols: number, existing?: string[][]): string[][] {
+  return Array.from({ length: rows }, (_, r) =>
+    Array.from({ length: cols }, (_, c) => existing?.[r]?.[c] ?? ''),
+  );
 }

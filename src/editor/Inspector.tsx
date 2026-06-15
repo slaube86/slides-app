@@ -1,5 +1,5 @@
 import { useDeck } from '../store/deckStore';
-import type { ShapeElement, TextElement } from '../types';
+import type { ShapeElement, TableElement, TextElement } from '../types';
 import {
   IconAlignLeft,
   IconAlignCenter,
@@ -47,6 +47,7 @@ export function Inspector() {
 
       {el.type === 'text' && <TextProps el={el} />}
       {el.type === 'shape' && <ShapeProps el={el} />}
+      {el.type === 'table' && <TableProps el={el} />}
       {el.type === 'image' && (
         <Field label="Füllung">
           <select
@@ -135,6 +136,58 @@ function ShapeProps({ el }: { el: ShapeElement }) {
         <ColorIn value={el.stroke ?? '#000000'} onChange={(v) => update(el.id, { stroke: v })} />
         <NumIn value={el.strokeWidth ?? 0} onChange={(v) => update(el.id, { strokeWidth: v })} suffix="px" />
       </Field>
+    </>
+  );
+}
+
+function TableProps({ el }: { el: TableElement }) {
+  const update = useDeck((s) => s.updateElement);
+  const resizeTable = useDeck((s) => s.resizeTable);
+  return (
+    <>
+      <Field label="Zeilen">
+        <NumIn value={el.rows} onChange={(v) => resizeTable(el.id, v, el.cols)} />
+        <button className="btn sm" onClick={() => resizeTable(el.id, el.rows - 1, el.cols)}>–</button>
+        <button className="btn sm" onClick={() => resizeTable(el.id, el.rows + 1, el.cols)}>+</button>
+      </Field>
+      <Field label="Spalten">
+        <NumIn value={el.cols} onChange={(v) => resizeTable(el.id, el.rows, v)} />
+        <button className="btn sm" onClick={() => resizeTable(el.id, el.rows, el.cols - 1)}>–</button>
+        <button className="btn sm" onClick={() => resizeTable(el.id, el.rows, el.cols + 1)}>+</button>
+      </Field>
+      <Field label="Kopfzeile">
+        <button
+          className={`btn sm${el.headerRow ? ' on' : ''}`}
+          onClick={() => update(el.id, { headerRow: !el.headerRow })}
+        >
+          {el.headerRow ? 'An' : 'Aus'}
+        </button>
+        {el.headerRow && (
+          <ColorIn value={el.headerFill ?? '#f1f5f9'} onChange={(v) => update(el.id, { headerFill: v })} />
+        )}
+      </Field>
+      <Field label="Rahmen">
+        <ColorIn value={el.borderColor ?? '#cbd5e1'} onChange={(v) => update(el.id, { borderColor: v })} />
+        <NumIn value={el.borderWidth ?? 1} onChange={(v) => update(el.id, { borderWidth: v })} suffix="px" />
+      </Field>
+      <Field label="Schrift">
+        <NumIn value={el.fontSize ?? 20} onChange={(v) => update(el.id, { fontSize: v })} suffix="px" />
+        <ColorIn value={el.color ?? '#111113'} onChange={(v) => update(el.id, { color: v })} />
+      </Field>
+      <Field label="Ausrichtung">
+        {(['left', 'center', 'right'] as const).map((a) => (
+          <button
+            key={a}
+            className={`btn sm icon-only${(el.align ?? 'left') === a ? ' on' : ''}`}
+            title={a === 'left' ? 'Linksbündig' : a === 'center' ? 'Zentriert' : 'Rechtsbündig'}
+            aria-label={a}
+            onClick={() => update(el.id, { align: a })}
+          >
+            {a === 'left' ? <IconAlignLeft size={15} /> : a === 'center' ? <IconAlignCenter size={15} /> : <IconAlignRight size={15} />}
+          </button>
+        ))}
+      </Field>
+      <p className="hint">Doppelklick auf die Tabelle, um Zellen zu bearbeiten.</p>
     </>
   );
 }

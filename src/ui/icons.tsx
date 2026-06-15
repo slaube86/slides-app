@@ -68,6 +68,16 @@ export const IconLine = (p: IconProps) => (
   </Svg>
 );
 
+export const IconTable = (p: IconProps) => (
+  <Svg {...p}>
+    <rect x="3" y="3" width="18" height="18" rx="2" />
+    <line x1="3" y1="9" x2="21" y2="9" />
+    <line x1="3" y1="15" x2="21" y2="15" />
+    <line x1="9" y1="3" x2="9" y2="21" />
+    <line x1="15" y1="3" x2="15" y2="21" />
+  </Svg>
+);
+
 export const IconImage = (p: IconProps) => (
   <Svg {...p}>
     <rect x="3" y="3" width="18" height="18" rx="2" />
@@ -147,6 +157,15 @@ export const IconBringForward = (p: IconProps) => (
   <Svg {...p}>
     <rect x="8" y="3" width="13" height="13" rx="2" />
     <path d="M5 11v8a2 2 0 0 0 2 2h8" />
+  </Svg>
+);
+
+export const IconMagnet = (p: IconProps) => (
+  <Svg {...p}>
+    <path d="M5 3v8a7 7 0 0 0 14 0V3" />
+    <path d="M9 3v8a3 3 0 0 0 6 0V3" />
+    <path d="M5 7h4" />
+    <path d="M15 7h4" />
   </Svg>
 );
 

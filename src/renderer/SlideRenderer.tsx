@@ -52,6 +52,11 @@ export const SlideRenderer = forwardRef<HTMLDivElement, Props>(function SlideRen
           height: Math.max(el.height, el.type === 'shape' && el.shape === 'line' ? 0 : 1),
           transform: el.rotation ? `rotate(${el.rotation}deg)` : undefined,
           transformOrigin: 'center center',
+          // Verhindert, dass Klicken/Ziehen eine Text-Markierung startet, statt
+          // das Element zu selektieren/bewegen. Im Editor zusätzlich Move-Cursor.
+          userSelect: 'none',
+          WebkitUserSelect: 'none',
+          cursor: onElementPointerDown ? 'move' : 'default',
         };
         return (
           <div
