@@ -1,5 +1,5 @@
 import { useDeck } from '../store/deckStore';
-import type { ShapeElement, TableElement, TextElement } from '../types';
+import type { ListElement, ShapeElement, TableElement, TextElement } from '../types';
 import {
   IconAlignLeft,
   IconAlignCenter,
@@ -48,6 +48,7 @@ export function Inspector() {
       {el.type === 'text' && <TextProps el={el} />}
       {el.type === 'shape' && <ShapeProps el={el} />}
       {el.type === 'table' && <TableProps el={el} />}
+      {el.type === 'list' && <ListProps el={el} />}
       {el.type === 'image' && (
         <Field label="Füllung">
           <select
@@ -188,6 +189,49 @@ function TableProps({ el }: { el: TableElement }) {
         ))}
       </Field>
       <p className="hint">Doppelklick auf die Tabelle, um Zellen zu bearbeiten.</p>
+    </>
+  );
+}
+
+function ListProps({ el }: { el: ListElement }) {
+  const update = useDeck((s) => s.updateElement);
+  const deck = useDeck((s) => s.deck)!;
+  return (
+    <>
+      <Field label="Typ">
+        <button
+          className={`btn sm${!el.ordered ? ' on' : ''}`}
+          onClick={() => update(el.id, { ordered: false })}
+        >
+          • Punkte
+        </button>
+        <button
+          className={`btn sm${el.ordered ? ' on' : ''}`}
+          onClick={() => update(el.id, { ordered: true })}
+        >
+          1. Nummern
+        </button>
+      </Field>
+      <Field label="Größe">
+        <NumIn value={el.fontSize ?? deck.theme.sizes.body} onChange={(v) => update(el.id, { fontSize: v })} suffix="px" />
+      </Field>
+      <Field label="Ausrichtung">
+        {(['left', 'center', 'right'] as const).map((a) => (
+          <button
+            key={a}
+            className={`btn sm icon-only${(el.align ?? 'left') === a ? ' on' : ''}`}
+            title={a === 'left' ? 'Linksbündig' : a === 'center' ? 'Zentriert' : 'Rechtsbündig'}
+            aria-label={a}
+            onClick={() => update(el.id, { align: a })}
+          >
+            {a === 'left' ? <IconAlignLeft size={15} /> : a === 'center' ? <IconAlignCenter size={15} /> : <IconAlignRight size={15} />}
+          </button>
+        ))}
+      </Field>
+      <Field label="Farbe">
+        <ColorIn value={el.color ?? deck.theme.palette[0]} onChange={(v) => update(el.id, { color: v })} />
+      </Field>
+      <p className="hint">Doppelklick auf die Liste zum Bearbeiten. Enter erzeugt einen neuen Punkt.</p>
     </>
   );
 }

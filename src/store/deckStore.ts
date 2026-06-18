@@ -3,6 +3,7 @@ import { produce, type Draft } from 'immer';
 import type {
   Deck,
   ImageElement,
+  ListElement,
   ShapeElement,
   Slide,
   SlideElement,
@@ -53,6 +54,8 @@ interface DeckState {
   addTable: (rows?: number, cols?: number) => void;
   resizeTable: (id: string, rows: number, cols: number) => void;
   updateTableCell: (id: string, row: number, col: number, html: string) => void;
+  addList: (ordered?: boolean) => void;
+  setListItems: (id: string, items: string[]) => void;
   updateElement: (
     id: string,
     patch: Partial<SlideElement>,
@@ -351,6 +354,42 @@ export const useDeck = create<DeckState>((set, get) => {
         if (el?.type !== 'table') return;
         if (!el.cells[row]) el.cells[row] = [];
         el.cells[row][col] = html;
+      }, false); // live, kein History-Spam (Checkpoint setzt der Edit-Start)
+    },
+
+    addList(ordered = false) {
+      const { deck, currentSlide } = get();
+      if (!deck) return;
+      const id = uid('e_');
+      const width = Math.min(640, deck.format.width * 0.5);
+      const el: ListElement = {
+        id,
+        type: 'list',
+        x: deck.format.width / 2 - width / 2,
+        y: deck.format.height / 2 - 110,
+        width,
+        height: 220,
+        rotation: 0,
+        z: nextZ(deck, currentSlide),
+        ordered,
+        items: ['Erster Punkt', 'Zweiter Punkt', 'Dritter Punkt'],
+        styleRole: 'body',
+        fontSize: 28,
+        color: deck.theme.palette[0],
+        align: 'left',
+      };
+      mutate((d) => {
+        currentSlideOf(d, currentSlide)?.elements.push(el);
+      });
+      set({ selectedId: id });
+    },
+
+    setListItems(id, items) {
+      const { currentSlide } = get();
+      mutate((d) => {
+        const el = currentSlideOf(d, currentSlide)?.elements.find((e) => e.id === id);
+        if (el?.type !== 'list') return;
+        el.items = items.length ? items : [''];
       }, false); // live, kein History-Spam (Checkpoint setzt der Edit-Start)
     },
 

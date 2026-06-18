@@ -2,6 +2,7 @@ import type { CSSProperties } from 'react';
 import type { ShapeElement, SlideElement, TextElement, Theme } from '../types';
 import { AssetImage } from './AssetImage';
 import { TableView } from './TableView';
+import { ListView } from './ListView';
 
 interface Props {
   element: SlideElement;
@@ -20,6 +21,8 @@ export function ElementView({ element, theme }: Props) {
       return <ShapeView el={element} />;
     case 'table':
       return <TableView el={element} theme={theme} />;
+    case 'list':
+      return <ListView el={element} theme={theme} />;
   }
 }
 

@@ -387,6 +387,59 @@ input[type='color'] {
   line-height: 1.55;
 }
 
+/* ---------- Share-Panel ---------- */
+.share-panel {
+  position: fixed;
+  top: 60px;
+  right: 16px;
+  width: 380px;
+  max-width: calc(100vw - 32px);
+  background: var(--bg);
+  border: 1px solid var(--line-strong);
+  border-radius: 12px;
+  padding: 14px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18);
+  z-index: 60;
+  animation: panel-in 0.16s ease-out;
+}
+@keyframes panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+}
+.share-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+.share-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+.share-input {
+  flex: 1;
+  min-width: 0;
+  background: var(--hover);
+  border: 1px solid var(--line-strong);
+  color: var(--ink);
+  border-radius: 7px;
+  padding: 7px 9px;
+  font-size: 12px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+.share-input:focus {
+  outline: none;
+  border-color: var(--ink);
+}
+.share-msg {
+  margin-top: 10px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
 /* ---------- Presentation ---------- */
 .present-root {
   position: fixed;

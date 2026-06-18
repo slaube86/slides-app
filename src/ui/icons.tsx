@@ -78,6 +78,28 @@ export const IconTable = (p: IconProps) => (
   </Svg>
 );
 
+export const IconList = (p: IconProps) => (
+  <Svg {...p}>
+    <line x1="9" y1="6" x2="20" y2="6" />
+    <line x1="9" y1="12" x2="20" y2="12" />
+    <line x1="9" y1="18" x2="20" y2="18" />
+    <circle cx="4.5" cy="6" r="1.1" fill="currentColor" stroke="none" />
+    <circle cx="4.5" cy="12" r="1.1" fill="currentColor" stroke="none" />
+    <circle cx="4.5" cy="18" r="1.1" fill="currentColor" stroke="none" />
+  </Svg>
+);
+
+export const IconListOrdered = (p: IconProps) => (
+  <Svg {...p}>
+    <line x1="10" y1="6" x2="20" y2="6" />
+    <line x1="10" y1="12" x2="20" y2="12" />
+    <line x1="10" y1="18" x2="20" y2="18" />
+    <path d="M4 4h1v4" />
+    <path d="M3 8h2" />
+    <path d="M3.5 12.5h1.5L3.5 15H5" />
+  </Svg>
+);
+
 export const IconImage = (p: IconProps) => (
   <Svg {...p}>
     <rect x="3" y="3" width="18" height="18" rx="2" />
@@ -166,6 +188,16 @@ export const IconMagnet = (p: IconProps) => (
     <path d="M9 3v8a3 3 0 0 0 6 0V3" />
     <path d="M5 7h4" />
     <path d="M15 7h4" />
+  </Svg>
+);
+
+export const IconShare = (p: IconProps) => (
+  <Svg {...p}>
+    <circle cx="18" cy="5" r="3" />
+    <circle cx="6" cy="12" r="3" />
+    <circle cx="18" cy="19" r="3" />
+    <line x1="8.6" y1="10.5" x2="15.4" y2="6.5" />
+    <line x1="8.6" y1="13.5" x2="15.4" y2="17.5" />
   </Svg>
 );
 

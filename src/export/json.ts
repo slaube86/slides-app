@@ -4,8 +4,8 @@ import { uid } from '../utils/id';
 
 // Portables Backup-Format: Deck + alle referenzierten Assets als Data-URL.
 // (Im LIVE-Deck bleiben Bilder Blobs in der assets-Tabelle — nur beim Export
-// werden sie eingebettet, damit die .json-Datei ein echtes Sicherungsnetz ist.)
-interface DeckBundle {
+// werden sie eingebettet, damit Datei/Link ein echtes Sicherungsnetz sind.)
+export interface DeckBundle {
   version: 1;
   deck: Deck;
   assets: { id: string; type: string; dataUrl: string }[];
@@ -35,28 +35,37 @@ async function dataUrlToBlob(dataUrl: string): Promise<Blob> {
   return (await fetch(dataUrl)).blob();
 }
 
-export async function exportDeckJson(deck: Deck): Promise<void> {
+// Schnürt Deck + Bilder zu einem eigenständigen Bundle (für Datei-Export & Share).
+export async function bundleDeck(deck: Deck): Promise<DeckBundle> {
   const assets: DeckBundle['assets'] = [];
   for (const id of collectAssetIds(deck)) {
     const asset = await getAsset(id);
     if (asset) assets.push({ id, type: asset.type, dataUrl: await blobToDataUrl(asset.blob) });
   }
-  const bundle: DeckBundle = { version: 1, deck, assets };
+  return { version: 1, deck, assets };
+}
+
+// Schreibt die Bilder zurück in die DB und liefert ein frisches Deck.
+export async function restoreBundle(bundle: DeckBundle): Promise<Deck> {
+  if (!bundle?.deck || !Array.isArray(bundle.assets)) {
+    throw new Error('Keine gültigen Präsentationsdaten.');
+  }
+  for (const a of bundle.assets) {
+    await putAsset({ id: a.id, blob: await dataUrlToBlob(a.dataUrl), type: a.type, createdAt: Date.now() });
+  }
+  // Frische ID, damit Import nicht ein vorhandenes Deck überschreibt.
+  return { ...bundle.deck, id: uid('d_'), updatedAt: Date.now() };
+}
+
+export async function exportDeckJson(deck: Deck): Promise<void> {
+  const bundle = await bundleDeck(deck);
   const blob = new Blob([JSON.stringify(bundle, null, 2)], { type: 'application/json' });
   triggerDownload(blob, `${sanitize(deck.title)}.json`);
 }
 
 export async function importDeckJson(file: File): Promise<Deck> {
   const bundle = JSON.parse(await file.text()) as DeckBundle;
-  if (!bundle.deck || !Array.isArray(bundle.assets)) {
-    throw new Error('Keine gültige Slides-Datei.');
-  }
-  // Assets wieder in die DB schreiben (IDs aus dem Bundle behalten).
-  for (const a of bundle.assets) {
-    await putAsset({ id: a.id, blob: await dataUrlToBlob(a.dataUrl), type: a.type, createdAt: Date.now() });
-  }
-  // Frische ID, damit Import nicht ein vorhandenes Deck überschreibt.
-  return { ...bundle.deck, id: uid('d_'), updatedAt: Date.now() };
+  return restoreBundle(bundle);
 }
 
 function triggerDownload(blob: Blob, filename: string): void {

@@ -6,6 +6,7 @@ import { SlideRenderer } from '../renderer/SlideRenderer';
 import { useStageScale } from './useStageScale';
 import { TextEditorOverlay } from './TextEditorOverlay';
 import { TableEditorOverlay } from './TableEditorOverlay';
+import { ListEditorOverlay } from './ListEditorOverlay';
 
 interface CanvasProps {
   snapEnabled: boolean;
@@ -21,6 +22,7 @@ export function Canvas({ snapEnabled }: CanvasProps) {
   const selectElement = useDeck((s) => s.selectElement);
   const updateElement = useDeck((s) => s.updateElement);
   const updateTableCell = useDeck((s) => s.updateTableCell);
+  const setListItems = useDeck((s) => s.setListItems);
   const checkpoint = useDeck((s) => s.checkpoint);
 
   const slide = deck.slides[currentSlide];
@@ -76,7 +78,8 @@ export function Canvas({ snapEnabled }: CanvasProps) {
   );
 
   const selEl = slide.elements.find((e) => e.id === selectedId);
-  const editable = selEl?.type === 'text' || selEl?.type === 'table';
+  const editable =
+    selEl?.type === 'text' || selEl?.type === 'table' || selEl?.type === 'list';
   const editing = editable && editingId === selectedId;
 
   return (
@@ -94,7 +97,7 @@ export function Canvas({ snapEnabled }: CanvasProps) {
           const node = (e.target as HTMLElement).closest('[data-element-id]');
           const id = node?.getAttribute('data-element-id');
           const t = id ? liveEl(id)?.type : undefined;
-          if (id && (t === 'text' || t === 'table')) {
+          if (id && (t === 'text' || t === 'table' || t === 'list')) {
             selectElement(id);
             checkpoint(); // ein Undo-Schritt für die gesamte Edit-Session
             setEditingId(id);
@@ -132,6 +135,14 @@ export function Canvas({ snapEnabled }: CanvasProps) {
             onCellInput={(r, c, html) => updateTableCell(selEl.id, r, c, html)}
           />
         )}
+        {editing && selEl?.type === 'list' && (
+          <ListEditorOverlay
+            key={`${selEl.id}:${selEl.ordered}`}
+            element={selEl}
+            theme={deck.theme}
+            onChange={(items) => setListItems(selEl.id, items)}
+          />
+        )}
       </div>
 
       {target && !editing && (
@@ -160,12 +171,12 @@ export function Canvas({ snapEnabled }: CanvasProps) {
           onDrag={(e: OnDrag) => {
             const s = gesture.current;
             if (!s || !selectedId) return;
-            // Moveable rechnet die Skalierung des Eltern-Containers selbst heraus
-            // (es invertiert die Matrix aller Vorfahren). beforeTranslate ist daher
-            // bereits in logischen Einheiten — NICHT durch scale teilen.
+            // Moveable liefert die Werte in Bildschirm-Pixeln → /scale ergibt
+            // logische Einheiten. Absolute Werte (beforeTranslate) ab Snapshot,
+            // damit nichts pro Frame driftet.
             updateElement(
               selectedId,
-              { x: s.x + e.beforeTranslate[0], y: s.y + e.beforeTranslate[1] },
+              { x: s.x + e.beforeTranslate[0] / scale, y: s.y + e.beforeTranslate[1] / scale },
               { history: false },
             );
           }}
@@ -175,15 +186,15 @@ export function Canvas({ snapEnabled }: CanvasProps) {
             if (!s || !selectedId) return;
             const el = liveEl(selectedId);
             const minH = el?.type === 'shape' && el.shape === 'line' ? 0 : 8;
-            // e.width/e.height = absolute neue Größe (logisch); e.drag.beforeTranslate
-            // = zugehörige Positionsverschiebung (für West-/Nord-Handles).
+            // e.dist = Größenänderung (Bildschirm-px) seit Gesten-Start → /scale.
+            // e.drag.beforeTranslate = zugehörige Positionsverschiebung (W/N-Handles).
             updateElement(
               selectedId,
               {
-                width: Math.max(8, e.width),
-                height: Math.max(minH, e.height),
-                x: s.x + e.drag.beforeTranslate[0],
-                y: s.y + e.drag.beforeTranslate[1],
+                width: Math.max(8, s.width + e.dist[0] / scale),
+                height: Math.max(minH, s.height + e.dist[1] / scale),
+                x: s.x + e.drag.beforeTranslate[0] / scale,
+                y: s.y + e.drag.beforeTranslate[1] / scale,
               },
               { history: false },
             );
